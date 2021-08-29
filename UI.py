@@ -6,10 +6,14 @@ import pandas as pd
 
 #ensuring correct black-scholes inputs
 def handle_volatility():
+  '''Repeatedly asks user to input a floating volatilility until a valid input is given
+
+  :return: (float) Valid volatility input
+  '''
   volatility_given = False
   while  not volatility_given:
     try:
-      volatility = float(input('Enter the implied volatility of the asset'))
+      volatility = float(input('Enter the implied volatility of the asset as a decimal (e.g. 0.2 represents 20%)'))
       if volatility>0:
         volatility_given = True
       else:
@@ -19,6 +23,10 @@ def handle_volatility():
   return volatility
 
 def handle_strike():
+  '''Repeatedly asks user to input a floating strike price until valid strike price is given
+
+  :return: (float) Valid strike price
+  '''
   strike_given = False
   while  not strike_given:
     try:
@@ -33,6 +41,10 @@ def handle_strike():
 
 #ensuring correct expiration date input
 def handle_expiration_date():
+  ''' Repeatedly asks user to input a future expiration date until a valid expiration date is given
+
+  :return: (int) Valid expiration date in seconds
+  '''
   this_year = datetime.datetime.now().year
   this_month = datetime.datetime.now().month
   this_day = datetime.datetime.now().day
@@ -54,10 +66,14 @@ def handle_expiration_date():
   return exp_date, exp_date_in_seconds
 
 def handle_risk_free_rate():
+  '''Repeatedly asks user to input a floating risk-free interest rate until a valid interest rate is given
+
+  :return: (float) Valid risk-free interest rate
+  '''
   risk_free_rate_given = False
   while  not risk_free_rate_given:
     try:
-      risk_free = float(input('Enter the current risk free rate of interest'))
+      risk_free = float(input('Enter the current risk free rate of interest as a decimal (e.g. 0.2 represents 20%)'))
       if risk_free>0:
         risk_free_rate_given = True
       else:
@@ -68,6 +84,11 @@ def handle_risk_free_rate():
 
 #Ensuring correct ticker input
 def handle_ticker():
+  '''Repeatedly asks user to input a ticker until a valid ticker is given.
+  Validity is determined by searching the web to check if such a ticker exists.
+
+  :return: (str) Valid ticker
+  '''
   ticker_given = False
   while not ticker_given:
     try:
