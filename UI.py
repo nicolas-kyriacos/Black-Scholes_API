@@ -39,6 +39,23 @@ def handle_strike():
       print('You need to give a floating value for strike',e)
   return strike
 
+def handle_stock():
+  '''Repeatedly asks user to input a floating stock price until valid stock price is given
+
+  :return: (float) Valid stock price
+  '''
+  stock_given = False
+  while  not stock_given:
+    try:
+      stock = float(input('Error 404 ticker not found. Enter the value of the current stock price of the ticker you were searching for'))
+      if stock>0:
+        stock_given = True
+      else:
+        print('You need to enter a positive value for stock')
+    except Exception as e:
+      print('You need to give a floating value for stock',e)
+  return stock
+
 #ensuring correct expiration date input
 def handle_expiration_date():
   ''' Repeatedly asks user to input a future expiration date until a valid expiration date is given
@@ -97,10 +114,12 @@ def handle_ticker():
       interval = '1d'
       query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={today_in_seconds-5*24*60*60}&period2={today_in_seconds}&interval={interval}&events=history&includeAdjustedClose=true'
       df = pd.read_csv(query_string)
+      stock = df.Close[len(df.Close) - 1]
       ticker_given = True
     except Exception as e:
-      print(e,'Ticker cannot be found')
-  return ticker
+      stock = handle_stock()
+      ticker_given = True
+  return stock
 
 BASE = 'http://127.0.0.1:5000/'
 
@@ -110,7 +129,7 @@ while not exit:
     play = str(input("Press 'Y' to run the program, and 'N' to exit the program"))
     if play == 'Y' or play.lower() == 'y':
       #user inputs
-      ticker = handle_ticker()
+      stock = handle_ticker()
       expiration_date_in_seconds = handle_expiration_date()[1]
       strike = handle_strike()
       volatility = handle_volatility()
@@ -129,8 +148,8 @@ while not exit:
 
       #viewing resulting call option
       # result = requests.get(BASE + 'stock/' + ticker + '/' + yesterday + '/' + today + '/' + str(strike) + '/'+ str(time_to_expiration) + '/' + str(volatility))
-      result = requests.get(f'{BASE}stock/{ticker}/{today-7*24*60*60}/{today}/{strike}/{time_to_expiration}/{volatility}/{risk_free_rate}')
-      print('call of',ticker,'asset at strike price of',strike,'and time to maturity of',time_to_expiration,'years: $',result.json()['call'])
+      result = requests.get(f'{BASE}stock/{stock}/{strike}/{time_to_expiration}/{volatility}/{risk_free_rate}')
+      print('call of asset at strike price of',strike,'and time to maturity of',time_to_expiration,'years: $',result.json()['call'])
     elif play=='N' or play.lower()=='n':
       print('Goodbye!')
       exit = True

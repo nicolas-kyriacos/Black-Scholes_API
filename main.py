@@ -35,7 +35,7 @@ def black_scholes(stock,strike,time_to_expiration,risk_free,volatility):
     return call
 
 class Stock_Option(Resource):
-    def get(self,ticker,yesterday,today,strike,time_to_expiration,volatility,risk_free_rate):
+    def get(self,stock,strike,time_to_expiration,volatility,risk_free_rate):
         '''Finds current stock price of a ticker on the web using an API,
          and returns European call option using Black-Scholes formula
 
@@ -50,14 +50,11 @@ class Stock_Option(Resource):
         representing percentage (e.g. 0.2 should be input to represent 20%)
         :return: European call option as dictionary
         '''
-        query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={yesterday}&period2={today}&interval=1d&events=history&includeAdjustedClose=true'
-        df = pd.read_csv(query_string)
-        stock = float(df.Close[len(df.Close)-1])
         call = black_scholes(stock,strike,time_to_expiration,risk_free_rate,volatility)
         return {'call':call}
 
 #registering Stock Option as a resource on the API
-api.add_resource(Stock_Option,'/stock/<string:ticker>/<string:yesterday>/<string:today>/<float:strike>/<float:time_to_expiration>/<float:volatility>/<float:risk_free_rate>')
+api.add_resource(Stock_Option,'/stock/<float:stock>/<float:strike>/<float:time_to_expiration>/<float:volatility>/<float:risk_free_rate>')
 
 if __name__=="__main__":
    app.run(debug=False)
