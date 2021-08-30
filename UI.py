@@ -138,16 +138,10 @@ while not exit:
       #calculate time to expiration
       today = int(time.mktime(datetime.date.today().timetuple()))
       seconds_in_a_day = 24*60*60
-      yesterday = today - seconds_in_a_day
       days_in_a_year = 365
       time_to_expiration = ((expiration_date_in_seconds - today)/(seconds_in_a_day))/days_in_a_year
 
-      #turning today, yesterday into strings for query
-      # today = str(today)
-      # yesterday = str(yesterday)
-
       #viewing resulting call option
-      # result = requests.get(BASE + 'stock/' + ticker + '/' + yesterday + '/' + today + '/' + str(strike) + '/'+ str(time_to_expiration) + '/' + str(volatility))
       result = requests.get(f'{BASE}stock/{stock}/{strike}/{time_to_expiration}/{volatility}/{risk_free_rate}')
       print('call of asset at strike price of',strike,'and time to maturity of',time_to_expiration,'years: $',result.json()['call'])
     elif play=='N' or play.lower()=='n':
