@@ -95,7 +95,7 @@ def handle_ticker():
       ticker = str(input('Enter a ticker symbol (e.g. The ticker symbol for Apple stock is AAPL, for Google is GOOG)'))
       today_in_seconds = int(time.mktime(datetime.date(datetime.datetime.now().year,datetime.datetime.now().month,datetime.datetime.now().day).timetuple()))
       interval = '1d'
-      query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={today_in_seconds-1*24*60*60}&period2={today_in_seconds}&interval={interval}&events=history&includeAdjustedClose=true'
+      query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={today_in_seconds-5*24*60*60}&period2={today_in_seconds}&interval={interval}&events=history&includeAdjustedClose=true'
       df = pd.read_csv(query_string)
       ticker_given = True
     except Exception as e:
@@ -124,12 +124,12 @@ while not exit:
       time_to_expiration = ((expiration_date_in_seconds - today)/(seconds_in_a_day))/days_in_a_year
 
       #turning today, yesterday into strings for query
-      today = str(today)
-      yesterday = str(yesterday)
+      # today = str(today)
+      # yesterday = str(yesterday)
 
       #viewing resulting call option
       # result = requests.get(BASE + 'stock/' + ticker + '/' + yesterday + '/' + today + '/' + str(strike) + '/'+ str(time_to_expiration) + '/' + str(volatility))
-      result = requests.get(f'{BASE}stock/{ticker}/{yesterday}/{today}/{strike}/{time_to_expiration}/{volatility}/{risk_free_rate}')
+      result = requests.get(f'{BASE}stock/{ticker}/{today-7*24*60*60}/{today}/{strike}/{time_to_expiration}/{volatility}/{risk_free_rate}')
       print('call of',ticker,'asset at strike price of',strike,'and time to maturity of',time_to_expiration,'years: $',result.json()['call'])
     elif play=='N' or play.lower()=='n':
       print('Goodbye!')
