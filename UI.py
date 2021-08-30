@@ -112,7 +112,7 @@ def handle_ticker():
       ticker = str(input('Enter a ticker symbol (e.g. The ticker symbol for Apple stock is AAPL, for Google is GOOG)'))
       today_in_seconds = int(time.mktime(datetime.date(datetime.datetime.now().year,datetime.datetime.now().month,datetime.datetime.now().day).timetuple()))
       interval = '1d'
-      query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={today_in_seconds-7*24*60*60}&period2={today_in_seconds}&interval={interval}&events=history&includeAdjustedClose=true'
+      query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={today_in_seconds-8*24*60*60}&period2={today_in_seconds}&interval={interval}&events=history&includeAdjustedClose=true'
       df = pd.read_csv(query_string)
       stock = df.Close[len(df.Close) - 1]
       ticker_given = True
